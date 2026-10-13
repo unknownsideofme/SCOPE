@@ -73,7 +73,4 @@ class Database {
     }
 }
 
-const db = Database.getInstance() ; 
-db.connect() ; 
-
-export default db ; 
+export default Database; 
