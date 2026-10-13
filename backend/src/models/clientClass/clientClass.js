@@ -65,17 +65,17 @@ export default class Client{
             throw new Error(err);
         }
     }
-    async getInfo(client_email) {
+    async getInfo(client_email, client_name) {
         const pool = Database.getInstance().client;
         try {
             const result = await pool.query(
                 `SELECT * FROM public.clients
-                 WHERE client_email = $1;`,
-                [client_email]
+                 WHERE client_email = $1 OR client_name = $2 ;`,
+                [client_email, client_name]
             );
             if (result.rows.length === 0) return null;
-            const { client_name, client_id } = result.rows[0];
-            this.setter(client_email, client_name, client_id);
+            const { client_name: fetched_name, clientid } = result.rows[0];
+            this.setter(result.rows[0].client_email, fetched_name, clientid);
             return result.rows[0];
         } catch (err) {
             throw new Error(err);

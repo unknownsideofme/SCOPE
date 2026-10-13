@@ -1,30 +1,34 @@
-import Database from './src/models/dbClass/dbClass.js'
-import Client from './src/models/clientClass/clientClass.js';
+import express from 'express';
+import Database from './src/models/dbClass/dbClass.js';
 
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+
+// --- Connect to DB ---
 const db = Database.getInstance();
-
 await db.connect();
 
-// --- Example usage ---
-const user3 = new Client();
-
-try {
-    const result = await user3.createNew(
-        "xyz@gmail.com",
-        "user5",
-        "abc"
-    );
-    console.log("Client created successfully:", result);
-
-} catch (err) {
-    // Log unique violation errors in plain English
-    if (err.message && err.message.includes("clients_client_email_key")) {
-        console.log("Client already exists. Fetching info:");
-        const info = await user3.getInfo("cde@gmail.com");
-        console.log(info);
-    } else {
-        throw err;
+// --- Routes ---
+app.get('/health', async (req, res) => {
+    try {
+        await db.client.query('SELECT 1');
+        res.status(200).json({
+            status: 'ok',
+            db: 'connected',
+            timestamp: new Date().toISOString(),
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 'error',
+            db: 'disconnected',
+            message: err.message,
+        });
     }
-}
+});
 
-await db.disconnect();
+// --- Start server ---
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
