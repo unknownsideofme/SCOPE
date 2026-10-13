@@ -1,3 +1,5 @@
+import {db} from '../dbclass/dbClass.js' ; 
+
 export default class Client{
     constructor(name , username){
         this.name = name ; 
