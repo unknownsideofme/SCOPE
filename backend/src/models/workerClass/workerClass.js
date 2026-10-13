@@ -8,17 +8,17 @@ export default class Worker {
         this.workerid = null;
     }
 
-    setter(worker_email, worker_name, workerid) {
+    setter(worker_email, worker_name, worker_id) {
         this.worker_email = worker_email;
         this.worker_name = worker_name;
-        this.workerid = workerid;
+        this.worker_id = worker_id;
     }
 
     getter() {
         return {
             worker_email: this.worker_email,
             worker_name: this.worker_name,
-            workerid: this.workerid,
+            worker_id: this.worker_id,
         };
     }
 
